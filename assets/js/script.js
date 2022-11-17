@@ -1,4 +1,4 @@
-var APIKey = "372217d19254a40455870d3bf6d14f8b";
+var APIKey = '372217d19254a40455870d3bf6d14f8b';
 var staticResponse = {
     "cod": "200",
     "message": 0,
@@ -1480,19 +1480,44 @@ var staticResponse = {
         "sunset": 1668555880
     }
 }
+var cityName = 'Denver'
+var APIString = 'https://api.openweathermap.org/data/2.5/forecast?appid=[key]&units=imperial&q='
+var fiveDay = [];
+var date = parseInt(fiveDay['date_txt']);
+console.log(date)
 
-function tits(staticResponse) {
-    console.log(staticResponse['city']['name']);
-    console.log(staticResponse['list'][4]['dt_txt']);
-    console.log(staticResponse['list'][4]['main']['temp'] + 'F');
-    console.log(staticResponse['list'][4]['main']['humidity'] + '%');
-    console.log(staticResponse['list'][4]['wind']['speed'] + ' ' + 'mph');
-    console.log(staticResponse['list'][4]['weather'][0]['icon']);
+
+function getData(cityName) {
+    APIString = APIString.replace('[key]', APIKey);
+
+
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      };
+      
+      fetch(APIString + cityName, requestOptions)
+        .then(response => response.text())
+        .then(result => extractData(JSON.parse(result)))
+        .catch(error => console.log('error', error));
+}
+
+
+
+function extractData(staticResponse) {
+    //console.log(staticResponse);
+    //console.log(staticResponse['city']['name']);
+    //console.log(staticResponse['list'][4]['dt_txt']);
+    //console.log(staticResponse['list'][4]['main']['temp'] + 'F');
+    //console.log(staticResponse['list'][4]['main']['humidity'] + '%');
+    //console.log(staticResponse['list'][4]['wind']['speed'] + ' ' + 'mph');
+    //console.log(staticResponse['list'][4]['weather'][0]['icon']);
     //console.log(staticResponse['list']);
 
     var fullForecast = staticResponse['list'];
-    var fiveDay = [];
+    fiveDay = [];
 
+    
 
     for (let i = 0; i < fullForecast.length; i++) {
       //console.log(fullForecast[i]['dt_txt']);
@@ -1501,16 +1526,56 @@ function tits(staticResponse) {
         fiveDay.push(fullForecast[i]);
         //console.log(fullForecast[i]['dt_txt']) 
       }
-      fullForecast[i]['dt_txt'];  
-    } 
+      //fullForecast[i]['dt_txt'];  
+    }     
     
-    console.log(fiveDay);
+    //console.log(fiveDay)
 
+    
 }
-tits(staticResponse);
+
+function displayData() {
+
+    for (let i = 0; i < fiveDay.length; i++) {
+        console.log(fiveDay);
+   
+
+        if (i == 0) {
+        document.getElementById("currentday").innerHTML += "<h3>" + fiveDay[i]['main']['temp'] + 'F' + "</h3>";
+        document.getElementById("currentday").innerHTML += "<h3>" + fiveDay[i]['dt_txt'] + "</h3>";
+        //document.getElementById("currentday").innerHTML += "<h3>" + fiveDay[i]['main']['humidity'] + '%' + "</h3>";
+        document.getElementById("currentday").innerHTML += "<h3>" + fiveDay[i]['weather'][0]['icon'] + "</h3>";
+        document.getElementById("currentday").innerHTML += "<h4>" + fiveDay[i]['wind']['speed'] + ' ' + 'mph' + "</h5>";  
+        
+        } else {
+            document.getElementById("card" + i).innerHTML += "<p> Temp: " + fiveDay[i]['main']['temp'] + 'F' + "</p>";
+        document.getElementById("card" + i).innerHTML += "<p>" + fiveDay[i]['dt_txt'] + "</p>";
+        document.getElementById("card" + i).innerHTML += "<p> Humidity: " + fiveDay[i]['main']['humidity'] + '%' + "</p>";
+        //document.getElementById("card" + i).innerHTML += "<p>" + fiveDay[i]['weather'][0]['icon'] + "</p>";
+        document.getElementById("card" + i).innerHTML += "<p> Wind: " + fiveDay[i]['wind']['speed'] + ' ' + 'mph' + "</p>";
+        document.getElementById("img" + i).src="http://openweathermap.org/img/wn/" + fiveDay[i]['weather'][0]['icon'] + "@2x.png";
+        }
+
+        
+    }
+
+
+   
+}
+
+extractData(staticResponse);
+getData(cityName);
+displayData();
+
 
 
 
 
 
 //'http://openweathermap.org/img/wn/10d@2x.png'
+
+//document.getElementById("fiveday").innerHTML += "<h3>" + fiveDay[1]['main']['temp'] + 'F' + "</h3>";
+//document.getElementById("fiveday").innerHTML += "<h3>" + fiveDay[1]['dt_txt'] + "</h3>";
+//document.getElementById("fiveday").innerHTML += "<h3>" + fiveDay[1]['main']['humidity'] + '%' + "</h3>";
+//document.getElementById("fiveday").innerHTML += "<h3>" + fiveDay[1]['weather'][0]['icon'] + "</h3>";
+//document.getElementById("fiveday").innerHTML += "<h3>" + fiveDay[1]['wind']['speed'] + ' ' + 'mph' + "</h3>";
