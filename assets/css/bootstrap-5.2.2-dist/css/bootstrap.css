@@ -30,9 +30,15 @@ header h1 {
   width: 100%;
   border-radius: 5px;
 }
+
 button {
-  width: 93.8%;
+  width: 90%;
   align-self: center;
+}
+
+resultBtn {
+  background-color: black;
+  border-radius: 5px;
 }
 
 #card1,#card2,#card3,#card4,#card5 {

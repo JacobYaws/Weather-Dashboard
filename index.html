@@ -16,13 +16,13 @@
 
  <main class="flex-row justify-space-between">
  <div class="row">
-  <div class="col-sm-3">
+  <div class="col-sm-2">
     <div class="card">
       <h3 class ="card-header text-uppercase">Search For a City</h3>
       <form id="user-form" class="card-body">
-        <input name="location"  type="text" autofocus="true" class="form-input" id="city" />
+        <input name="location"  type="text" autofocus="true" class="form-input" id="searchInput" />
       </form>
-      <button type="submit" class="searchbtn">Search</button>
+      <button type="submit" class="searchbtn" id="searchBtn">Search</button>
     </div>
   </div>
 
@@ -30,19 +30,15 @@
 
 
 
-  <div class="col-sm-8" id="currentday">Current day forecast
-
-
-
-
-
+  <div class="col-sm-10" id="currentday">
+    <img class="" id= "img0" src="" alt="Card image cap">
   </div>
 
-  <div class="col-sm-3" id="search-history">
+  <div class="col-sm-2" id="search-history">
     Search history
   </div>
 
-  <div class="col-sm-8" id="fiveday">
+  <div class="col-sm-10" id="fiveday">
        <div class="card" id="card1">
       <img class="card-img-top" id= "img1" src="" alt="Card image cap">
         <div class="card-body">
@@ -50,10 +46,10 @@
      </div>
       <div class="card" id="card2">
         <img class="card-img-top" id= "img2" src="" alt="Card image cap">
-        <div class="card-body">
+        <div class="card-body" id="card">
        </div>
       </div>
-     <div class="card" id="card3">
+     <div class="card" id="card3">    
       <img class="card-img-top" id= "img3" src="" alt="Card image cap">
         <div class="card-body">
         </div>
@@ -67,6 +63,7 @@
         <img class="card-img-top" id= "img5" src="" alt="Card image cap">
         <div class="card-body">
       </div> -->
+      
    </div>
   </div>
 </div>
