@@ -1483,8 +1483,6 @@ var staticResponse = {
 var cityName = 'Denver'
 var APIString = 'https://api.openweathermap.org/data/2.5/forecast?appid=[key]&units=imperial&q='
 var fiveDay = [];
-var date = parseInt(fiveDay['date_txt']);
-console.log(date)
 
 
 function getData(cityName) {
@@ -1517,8 +1515,6 @@ function extractData(staticResponse) {
     var fullForecast = staticResponse['list'];
     fiveDay = [];
 
-    
-
     for (let i = 0; i < fullForecast.length; i++) {
       //console.log(fullForecast[i]['dt_txt']);
       //console.log(i % 8 == 0)
@@ -1530,38 +1526,44 @@ function extractData(staticResponse) {
     }     
     
     //console.log(fiveDay)
-
-    
+  
 }
 
 function displayData() {
 
     for (let i = 0; i < fiveDay.length; i++) {
         console.log(fiveDay);
-   
 
         if (i == 0) {
-        document.getElementById("currentday").innerHTML += "<h3>" + fiveDay[i]['main']['temp'] + 'F' + "</h3>";
-        document.getElementById("currentday").innerHTML += "<h3>" + fiveDay[i]['dt_txt'] + "</h3>";
-        //document.getElementById("currentday").innerHTML += "<h3>" + fiveDay[i]['main']['humidity'] + '%' + "</h3>";
-        document.getElementById("currentday").innerHTML += "<h3>" + fiveDay[i]['weather'][0]['icon'] + "</h3>";
-        document.getElementById("currentday").innerHTML += "<h4>" + fiveDay[i]['wind']['speed'] + ' ' + 'mph' + "</h5>";  
+        document.getElementById("currentday").innerHTML += "<h3>" + (dayjs(fiveDay[i]['dt_txt'].substr(0,11)).format('MM/DD/YYYY')) + "</h3>";
+        document.getElementById("currentday").innerHTML += "<h3> Temp: " + fiveDay[i]['main']['temp'] + ' °F' + "</h3>"; 
+        document.getElementById("currentday").innerHTML += "<h4> Humidity: " + fiveDay[i]['main']['humidity'] + '%' + "</h4>";  
+        document.getElementById("currentday").innerHTML += "<h4> Wind: " + fiveDay[i]['wind']['speed'] + ' ' + 'mph' + "</h5>";
+        document.getElementById("img" + i).src="http://openweathermap.org/img/wn/" + fiveDay[i]['weather'][0]['icon'] + "@2x.png";  
         
         } else {
-            document.getElementById("card" + i).innerHTML += "<p> Temp: " + fiveDay[i]['main']['temp'] + 'F' + "</p>";
-        document.getElementById("card" + i).innerHTML += "<p>" + fiveDay[i]['dt_txt'] + "</p>";
-        document.getElementById("card" + i).innerHTML += "<p> Humidity: " + fiveDay[i]['main']['humidity'] + '%' + "</p>";
-        //document.getElementById("card" + i).innerHTML += "<p>" + fiveDay[i]['weather'][0]['icon'] + "</p>";
-        document.getElementById("card" + i).innerHTML += "<p> Wind: " + fiveDay[i]['wind']['speed'] + ' ' + 'mph' + "</p>";
+        document.getElementById("card" + i).innerHTML += "<h4>" + (dayjs(fiveDay[i]['dt_txt'].substr(0,11)).format('MM/DD/YYYY')) + "</h4>";
+        document.getElementById("card" + i).innerHTML += "<h4> Temp: " + fiveDay[i]['main']['temp'] + ' °F' + "</h4>";
+        document.getElementById("card" + i).innerHTML += "<h4> Humidity: " + fiveDay[i]['main']['humidity'] + '%' + "</h4>";
+        document.getElementById("card" + i).innerHTML += "<h4> Wind: " + fiveDay[i]['wind']['speed'] + ' ' + 'mph' + "</h4>";
         document.getElementById("img" + i).src="http://openweathermap.org/img/wn/" + fiveDay[i]['weather'][0]['icon'] + "@2x.png";
-        }
 
-        
+        }        
     }
-
-
-   
 }
+
+document.getElementById('searchBtn').addEventListener('click', ()=> {
+    console.log('click');
+    let searchItem = document.getElementById('searchInput').value;
+    console.log(searchItem)
+    let searchList = document.getElementById("search-history")
+    let liElement = document.createElement('button', id="resultBtn")
+    document.getElementById('resultBtn').style.color = "yellow";
+    searchList.append(liElement)
+    console.log(liElement)
+    liElement.innerText = searchItem
+
+})
 
 extractData(staticResponse);
 getData(cityName);
