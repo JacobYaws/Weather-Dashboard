@@ -1480,7 +1480,15 @@ var staticResponse = {
         "sunset": 1668555880
     }
 }
+
 var cityName = 'Denver'
+
+//var searchItem = []
+//let cityNameSearch = document.getElementById('searchBtn').addEventListener('click', function() {
+   // document.q("searchInput").valueOf = cityNameSearch;
+   // console.log(this.querySelectorAll('#searchInput').value)
+
+//})
 var APIString = 'https://api.openweathermap.org/data/2.5/forecast?appid=[key]&units=imperial&q='
 var fiveDay = [];
 
@@ -1526,48 +1534,75 @@ function extractData(staticResponse) {
     }     
     
     //console.log(fiveDay)
-  
+    //clearData();
+  displayData();
+}
+
+function clearData() {
+    for (let i = 0; i < 5; i++) {
+        //console.log(document.getElementById("img" + i).src)
+        console.log(document.getElementById("currentday").children);
+        var cday = document.getElementById("currentday");
+        var card = document.getElementById("card" + i);
+        console.log(cday.children)
+        for (let j = 4; j > 0; j--) {
+            if (i == 0 && j != 0) {
+                console.log(cday.children[j])
+                cday.children[j].remove();
+            } else if (i != 0 && j != 0) {
+                card.children[j].remove();
+            } 
+        }        
+    }
 }
 
 function displayData() {
 
     for (let i = 0; i < fiveDay.length; i++) {
         console.log(fiveDay);
-
+        
+        
         if (i == 0) {
-        document.getElementById("currentday").innerHTML += "<h3>" + (dayjs(fiveDay[i]['dt_txt'].substr(0,11)).format('MM/DD/YYYY')) + "</h3>";
-        document.getElementById("currentday").innerHTML += "<h3> Temp: " + fiveDay[i]['main']['temp'] + ' °F' + "</h3>"; 
-        document.getElementById("currentday").innerHTML += "<h4> Humidity: " + fiveDay[i]['main']['humidity'] + '%' + "</h4>";  
-        document.getElementById("currentday").innerHTML += "<h4> Wind: " + fiveDay[i]['wind']['speed'] + ' ' + 'mph' + "</h5>";
-        document.getElementById("img" + i).src="http://openweathermap.org/img/wn/" + fiveDay[i]['weather'][0]['icon'] + "@2x.png";  
+            
+            document.getElementById("currentday").innerHTML += "<h3>" + (dayjs(fiveDay[i]['dt_txt'].substr(0,11)).format('MM/DD/YYYY')) + "</h3>";
+            document.getElementById("currentday").innerHTML += "<h3> Temp: " + fiveDay[i]['main']['temp'] + ' °F' + "</h3>"; 
+            document.getElementById("currentday").innerHTML += "<h4> Humidity: " + fiveDay[i]['main']['humidity'] + '%' + "</h4>";  
+            document.getElementById("currentday").innerHTML += "<h4> Wind: " + fiveDay[i]['wind']['speed'] + ' ' + 'mph' + "</h5>";
+            document.getElementById("img" + i).setAttribute('src', "http://openweathermap.org/img/wn/" + fiveDay[i]['weather'][0]['icon'] + "@2x.png");  
+            console.log(document.getElementById("currentday"))
         
         } else {
-        document.getElementById("card" + i).innerHTML += "<h4>" + (dayjs(fiveDay[i]['dt_txt'].substr(0,11)).format('MM/DD/YYYY')) + "</h4>";
-        document.getElementById("card" + i).innerHTML += "<h4> Temp: " + fiveDay[i]['main']['temp'] + ' °F' + "</h4>";
-        document.getElementById("card" + i).innerHTML += "<h4> Humidity: " + fiveDay[i]['main']['humidity'] + '%' + "</h4>";
-        document.getElementById("card" + i).innerHTML += "<h4> Wind: " + fiveDay[i]['wind']['speed'] + ' ' + 'mph' + "</h4>";
-        document.getElementById("img" + i).src="http://openweathermap.org/img/wn/" + fiveDay[i]['weather'][0]['icon'] + "@2x.png";
+            document.getElementById("card" + i).innerHTML += "<h4>" + (dayjs(fiveDay[i]['dt_txt'].substr(0,11)).format('MM/DD/YYYY')) + "</h4>";
+            document.getElementById("card" + i).innerHTML += "<h4> Temp: " + fiveDay[i]['main']['temp'] + ' °F' + "</h4>";
+            document.getElementById("card" + i).innerHTML += "<h4> Humidity: " + fiveDay[i]['main']['humidity'] + '%' + "</h4>";
+            document.getElementById("card" + i).appendChild += "<h4> Wind: " + fiveDay[i]['wind']['speed'] + ' ' + 'mph' + "</h4>";
+            document.getElementById("img" + i).setAttribute('src', "http://openweathermap.org/img/wn/" + fiveDay[i]['weather'][0]['icon'] + "@2x.png");
 
-        }        
+        }
+        console.log(document.getElementById("currentday").children);
     }
 }
 
 document.getElementById('searchBtn').addEventListener('click', ()=> {
     console.log('click');
+    
     let searchItem = document.getElementById('searchInput').value;
-    console.log(searchItem)
+    getData(searchItem)
     let searchList = document.getElementById("search-history")
     let liElement = document.createElement('button', id="resultBtn")
-    document.getElementById('resultBtn').style.color = "yellow";
+    document.getElementById('resultBtn')
     searchList.append(liElement)
+    liElement.setAttribute("id", "searchHistory")
     console.log(liElement)
     liElement.innerText = searchItem
-
 })
 
-extractData(staticResponse);
+
+//extractData(staticResponse);
 getData(cityName);
-displayData();
+clearData();
+
+
 
 
 
