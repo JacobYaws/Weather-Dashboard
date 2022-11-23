@@ -1481,8 +1481,7 @@ var staticResponse = {
     }
 }
 
-var cityName = 'Denver'
-
+var defaultCityName = 'Denver'
 //var searchItem = []
 //let cityNameSearch = document.getElementById('searchBtn').addEventListener('click', function() {
    // document.q("searchInput").valueOf = cityNameSearch;
@@ -1492,7 +1491,7 @@ var cityName = 'Denver'
 var APIString = 'https://api.openweathermap.org/data/2.5/forecast?appid=[key]&units=imperial&q='
 var fiveDay = [];
 
-
+// This function is the API call that pulls all the data needed for the page. The data is pulled in as an object to use for later.
 function getData(cityName) {
     APIString = APIString.replace('[key]', APIKey);
 
@@ -1509,7 +1508,7 @@ function getData(cityName) {
 }
 
 
-
+// This function is used to manipulate the data to get only the relevant data needed for the page.
 function extractData(staticResponse) {
     //console.log(staticResponse);
     //console.log(staticResponse['city']['name']);
@@ -1522,7 +1521,7 @@ function extractData(staticResponse) {
 
     var fullForecast = staticResponse['list'];
     fiveDay = [];
-
+// This for loop is used to pull every 8th set of data to get weather info once for each seperate day.
     for (let i = 0; i < fullForecast.length; i++) {
       //console.log(fullForecast[i]['dt_txt']);
       //console.log(i % 8 == 0)
@@ -1531,77 +1530,153 @@ function extractData(staticResponse) {
         //console.log(fullForecast[i]['dt_txt']) 
       }
       //fullForecast[i]['dt_txt'];  
-    }     
+    }   
+    // This finds the city name from the data and assigns it to a variable.  
+    searchedCityName = staticResponse['city']['name'];
     
-    //console.log(fiveDay)
-    //clearData();
   displayData();
 }
 
 function clearData() {
+    var cday = document.getElementById("currentday");
+
+    // This for loop is used to clear each card so whenever a new search is executed, whatever is in the card is cleared, and the new data is presented.
     for (let i = 0; i < 5; i++) {
+        var img = document.createElement("img");
+        img.className = "card-img-top";
+        img.alt = "Card image cap";
+        img.id="img"+i;
         //console.log(document.getElementById("img" + i).src)
-        console.log(document.getElementById("currentday").children);
-        var cday = document.getElementById("currentday");
-        var card = document.getElementById("card" + i);
-        console.log(cday.children)
-        for (let j = 4; j > 0; j--) {
+        //console.log(document.getElementById("currentday").children);
+        if (i == 0) {
+            //cday.innerHTML = imgDef.replace("imgX", "img"+i);
+            cday.replaceChildren(img)
+        } else {
+            var card = document.getElementById("card" + i);
+            card.replaceChildren(img);
+        }
+
+        //console.log(cday.children)
+        /* for (let j = 4; j > 0; j--) {
             if (i == 0 && j != 0) {
-                console.log(cday.children[j])
+                //console.log(cday.children[j])
                 cday.children[j].remove();
             } else if (i != 0 && j != 0) {
                 card.children[j].remove();
             } 
-        }        
+        } */        
     }
 }
 
 function displayData() {
-
+    clearData();
+    // This for loop is used to take the relevant data and display it in each card whenever a new search is executed.
     for (let i = 0; i < fiveDay.length; i++) {
-        console.log(fiveDay);
+        //console.log(fiveDay);
         
+        // These provide the text content for each individual piece of data.
+        var dateElem = document.createElement("h3");
+        dateElem.textContent = (dayjs(fiveDay[i]['dt_txt'].substr(0,11)).format('MM/DD/YYYY'));
+        dateElem.classList.add("date");
+        var tempElem = document.createElement("h3");
+        tempElem.textContent = "Temp: " + fiveDay[i]['main']['temp'] + ' °F'
+        tempElem.classList.add("temp");
+        var humElem = document.createElement("h4");
+        humElem.textContent = "Humidity: " + fiveDay[i]['main']['humidity'] + '%'
+        humElem.classList.add("hum");
+        var windElem = document.createElement("h4");
+        windElem.textContent = "Wind: " + fiveDay[i]['wind']['speed'] + ' ' + 'mph'
+        windElem.classList.add("wind");
         
+        // This if-else statement uses the pulled data and places it in the correct card so that the weather for each day is accurately represented. 
         if (i == 0) {
-            
-            document.getElementById("currentday").innerHTML += "<h3>" + (dayjs(fiveDay[i]['dt_txt'].substr(0,11)).format('MM/DD/YYYY')) + "</h3>";
+
+            var cday = document.getElementById("currentday");
+            let cityNameElem = document.createElement("h3");
+            cityNameElem.innerText = searchedCityName;
+            cday.insertBefore(cityNameElem, cday.children[0])
+            cday.appendChild(dateElem);
+            cday.appendChild(tempElem);
+            cday.appendChild(humElem);
+            cday.appendChild(windElem);
+
+            /* document.getElementById("currentday").innerHTML += "<h3>" + (dayjs(fiveDay[i]['dt_txt'].substr(0,11)).format('MM/DD/YYYY')) + "</h3>";
             document.getElementById("currentday").innerHTML += "<h3> Temp: " + fiveDay[i]['main']['temp'] + ' °F' + "</h3>"; 
             document.getElementById("currentday").innerHTML += "<h4> Humidity: " + fiveDay[i]['main']['humidity'] + '%' + "</h4>";  
-            document.getElementById("currentday").innerHTML += "<h4> Wind: " + fiveDay[i]['wind']['speed'] + ' ' + 'mph' + "</h5>";
+            document.getElementById("currentday").innerHTML += "<h4> Wind: " + fiveDay[i]['wind']['speed'] + ' ' + 'mph' + "</h5>"; */
             document.getElementById("img" + i).setAttribute('src', "http://openweathermap.org/img/wn/" + fiveDay[i]['weather'][0]['icon'] + "@2x.png");  
-            console.log(document.getElementById("currentday"))
+            //console.log(document.getElementById("currentday"))
         
         } else {
-            document.getElementById("card" + i).innerHTML += "<h4>" + (dayjs(fiveDay[i]['dt_txt'].substr(0,11)).format('MM/DD/YYYY')) + "</h4>";
+            var card = document.getElementById("card" + i);
+            card.appendChild(dateElem);
+            card.appendChild(tempElem);
+            card.appendChild(humElem);
+            card.appendChild(windElem);
+
+            /* document.getElementById("card" + i).innerHTML += "<h4>" + (dayjs(fiveDay[i]['dt_txt'].substr(0,11)).format('MM/DD/YYYY')) + "</h4>";
             document.getElementById("card" + i).innerHTML += "<h4> Temp: " + fiveDay[i]['main']['temp'] + ' °F' + "</h4>";
             document.getElementById("card" + i).innerHTML += "<h4> Humidity: " + fiveDay[i]['main']['humidity'] + '%' + "</h4>";
-            document.getElementById("card" + i).appendChild += "<h4> Wind: " + fiveDay[i]['wind']['speed'] + ' ' + 'mph' + "</h4>";
+            document.getElementById("card" + i).appendChild += "<h4> Wind: " + fiveDay[i]['wind']['speed'] + ' ' + 'mph' + "</h4>"; */
             document.getElementById("img" + i).setAttribute('src', "http://openweathermap.org/img/wn/" + fiveDay[i]['weather'][0]['icon'] + "@2x.png");
 
         }
-        console.log(document.getElementById("currentday").children);
+        //console.log(document.getElementById("currentday").children);
     }
 }
-
+// This function is used when the search button is clicked. It takes the text entry and grabs all of the weather data for it if it is a real city. 
+// This function also stores the text entry into local storage and appends a list item so that the entry is represented in the search history if the page is refreshed.
 document.getElementById('searchBtn').addEventListener('click', ()=> {
-    console.log('click');
+    //console.log('click');
     
     let searchItem = document.getElementById('searchInput').value;
-    getData(searchItem)
+    
+    if(String(searchItem).length != 0) {
+        getData(searchItem)
+        //console.log(liElement)
+        let prevCities = localStorage.getItem("cities");
+        if (prevCities != null) {
+            prevCities = JSON.parse(prevCities)
+            if(!prevCities.includes(String(searchItem).toLowerCase())) {
+                prevCities.push(String(searchItem).toLowerCase());
+                createResultButton(String(searchItem).toLowerCase());
+            }
+            localStorage.setItem("cities", JSON.stringify(prevCities))
+        } else {
+            prevCities = []
+            //prevCities.push(cityName)
+            //createResultButton(cityName)
+            prevCities.push(String(searchItem).toLowerCase())
+            createResultButton(String(searchItem).toLowerCase());
+            localStorage.setItem("cities", JSON.stringify(prevCities))
+        }
+    }
+})
+
+// This function creates the button for cities that were searched (current and past searches), as well as allows the buttons in the search history to pull data for that entry (clicking on a button in the search history will display the accurate data for that location).
+function createResultButton(buttonName) {
     let searchList = document.getElementById("search-history")
     let liElement = document.createElement('button', id="resultBtn")
     document.getElementById('resultBtn')
     searchList.append(liElement)
     liElement.setAttribute("id", "searchHistory")
-    console.log(liElement)
-    liElement.innerText = searchItem
-})
+    liElement.innerText = buttonName;
+    liElement.addEventListener('click', () => {
+        //console.log('click')
+        //console.log(liElement)
+        getData(liElement.innerText);
+    });
+}
 
-
+//This function grabs the data for a set location upon refreshing the page (Denver weather). It is also used to grab the data from local storage and create the buttons in the search history.
 //extractData(staticResponse);
-getData(cityName);
-clearData();
-
+getData(defaultCityName);
+prevCities = JSON.parse(localStorage.getItem("cities"));
+if(prevCities != null) {
+    for (let i = 0; i < prevCities.length; i++) {
+        createResultButton(prevCities[i])
+    }
+}
 
 
 
